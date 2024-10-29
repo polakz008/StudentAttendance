@@ -55,6 +55,13 @@ namespace StudentAttendance
 
             Console.WriteLine($"Zapisano plik na pulpicie: {outputFilePath}");
             Console.ReadKey();
+
+            // Tworzymy słownik do przechowywania obecności studentów
+            Dictionary<Students, bool> obecnosci = new Dictionary<Students, bool>();
+            foreach (var student in studenci)
+            {
+                obecnosci[student] = student.Obecny;
+            }
         }
 
         static List<Students> ImportStudentow(string filePath)
