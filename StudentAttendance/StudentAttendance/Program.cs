@@ -62,7 +62,11 @@ namespace StudentAttendance
             {
                 obecnosci[student] = student.Obecny;
             }
+
+
         }
+
+        
 
         static List<Students> ImportStudentow(string filePath)
         {
@@ -139,6 +143,17 @@ namespace StudentAttendance
             studenci.Add(nowyStudent);
 
             Console.WriteLine($"Dodano nowego studenta: {nowyStudent.ToString()}");
+        }
+
+        // Funkcja do edycji obecności w słowniku
+        static void EdytujObecnosc(Dictionary<Students, bool> obecnosci)
+        {
+            Console.WriteLine("Edycja obecności studentów:");
+            foreach (var student in obecnosci.Keys)
+            {
+                Console.Write($"Czy {student.Imie} {student.Nazwisko} jest obecny? (tak/nie): ");
+                obecnosci[student] = Console.ReadLine().ToLower() == "tak";
+            }
         }
     }
 
