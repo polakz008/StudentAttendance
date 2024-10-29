@@ -155,6 +155,18 @@ namespace StudentAttendance
                 obecnosci[student] = Console.ReadLine().ToLower() == "tak";
             }
         }
+
+        // Funkcja synchronizująca obecność między słownikiem a listą studentów
+        static void SynchronizujObecnosc(List<Students> studenci, Dictionary<Students, bool> obecnosci)
+        {
+            foreach (var student in studenci)
+            {
+                if (obecnosci.ContainsKey(student))
+                {
+                    student.Obecny = obecnosci[student];
+                }
+            }
+        }
     }
 
     public class Students
