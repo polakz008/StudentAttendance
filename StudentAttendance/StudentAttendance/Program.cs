@@ -35,6 +35,19 @@ namespace StudentAttendance
                 DodajNowegoStudenta(studenci);
             }
 
+            // Tworzymy słownik do przechowywania obecności studentów
+            Dictionary<Students, bool> obecnosci = new Dictionary<Students, bool>();
+            foreach (var student in studenci)
+            {
+                obecnosci[student] = student.Obecny;
+            }
+
+            // Edytujemy obecność w słowniku
+            EdytujObecnosc(obecnosci);
+
+            // Synchronizujemy obecność ze słownika do listy studentów przed eksportem
+            SynchronizujObecnosc(studenci, obecnosci);
+
             // Eksport do formatu wybranego przez użytkownika
             Console.Write("Podaj format zapisu txt/csv: ");
             string format = Console.ReadLine().ToUpper();
@@ -56,12 +69,7 @@ namespace StudentAttendance
             Console.WriteLine($"Zapisano plik na pulpicie: {outputFilePath}");
             Console.ReadKey();
 
-            // Tworzymy słownik do przechowywania obecności studentów
-            Dictionary<Students, bool> obecnosci = new Dictionary<Students, bool>();
-            foreach (var student in studenci)
-            {
-                obecnosci[student] = student.Obecny;
-            }
+            
 
 
         }
