@@ -18,20 +18,26 @@ namespace StudentAttendance
             if (studenci.Count == 0)
             {
                 Console.WriteLine("Plik nie zawiera studentów lub nie istnieje.");
-                return;
             }
-
-            Console.WriteLine("Lista studentów:");
-            foreach (var student in studenci)
+            else
             {
-                Console.WriteLine($"{student.ToString()}");
+                Console.WriteLine("Lista studentów:");
+                foreach (var student in studenci)
+                {
+                    Console.WriteLine($"{student.ToString()}");
+                }
             }
 
-            Console.WriteLine("");
+            // Dodawanie nowego studenta
+            Console.Write("Czy chcesz dodać nowego studenta? (tak/nie): ");
+            if (Console.ReadLine().ToLower() == "tak")
+            {
+                DodajNowegoStudenta(studenci);
+            }
+
+            // Eksport do formatu wybranego przez użytkownika
             Console.Write("Podaj format zapisu txt/csv: ");
             string format = Console.ReadLine().ToUpper();
-
-            // Ścieżka zapisu na pulpicie
             string outputFilePath = Path.Combine(desktopPath, format == "CSV" ? "Obecni_Export.csv" : "Obecni_Export.txt");
 
             if (format == "CSV")
@@ -81,11 +87,9 @@ namespace StudentAttendance
             {
                 using (StreamWriter sw = new StreamWriter(filePath))
                 {
-                    // Nagłówki kolumn
                     sw.WriteLine("Imie,Nazwisko,Obecny");
                     foreach (var student in studenci)
                     {
-                        // Zapisujemy dane w formacie CSV
                         sw.WriteLine(student.ToCsv());
                     }
                 }
@@ -105,7 +109,6 @@ namespace StudentAttendance
                 {
                     foreach (var student in studenci)
                     {
-                        // Zapisujemy dane w formacie tekstowym
                         sw.WriteLine(student.ToString());
                     }
                 }
@@ -116,7 +119,45 @@ namespace StudentAttendance
                 Console.WriteLine($"Błąd przy zapisie pliku TXT: {ex.Message}");
             }
         }
+
+        // Funkcja do dodawania nowego studenta
+        static void DodajNowegoStudenta(List<Students> studenci)
+        {
+            Console.Write("Podaj imię studenta: ");
+            string imie = Console.ReadLine();
+            Console.Write("Podaj nazwisko studenta: ");
+            string nazwisko = Console.ReadLine();
+
+            Students nowyStudent = new Students(imie, nazwisko);
+            studenci.Add(nowyStudent);
+
+            Console.WriteLine($"Dodano nowego studenta: {nowyStudent.ToString()}");
+        }
+    }
+
+    public class Students
+    {
+        public string Imie { get; set; }
+        public string Nazwisko { get; set; }
+        public bool Obecny { get; set; }
+
+        public Students(string imie, string nazwisko)
+        {
+            Imie = imie;
+            Nazwisko = nazwisko;
+            Obecny = true; // Możemy przyjąć, że dodany student jest obecny
+        }
+
+        public override string ToString()
+        {
+            return $"{Imie} {Nazwisko} - {(Obecny ? "Obecny" : "Nieobecny")}";
+        }
+
+        public string ToCsv()
+        {
+            return $"{Imie},{Nazwisko},{(Obecny ? "Obecny" : "Nieobecny")}";
+        }
     }
 }
 
-    
+
