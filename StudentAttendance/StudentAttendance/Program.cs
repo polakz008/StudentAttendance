@@ -53,7 +53,7 @@ namespace StudentAttendance
             Dictionary<Students, bool> obecnosci = new Dictionary<Students, bool>();
             foreach (var student in studenci)
             {
-                obecnosci[student] = student.Obecny;
+                obecnosci[student] = student.Obecnosc;
             }
 
             // Edytujemy obecność w słowniku
@@ -198,9 +198,10 @@ namespace StudentAttendance
             {
                 if (obecnosci.ContainsKey(student))
                 {
-                    student.Obecny = obecnosci[student];
+                    student.Obecnosc = obecnosci[student];
                 }
-
+            }
+        }
         static void SprawdzObecnosc(List<Students> studenci)
         {
             foreach (var student in studenci)
