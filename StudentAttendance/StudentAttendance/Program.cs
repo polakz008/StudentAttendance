@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Runtime.CompilerServices;
 
 namespace StudentAttendance
 {
@@ -21,11 +23,22 @@ namespace StudentAttendance
             }
             else
             {
+                //podanie daty
+                Console.WriteLine("Podaj dzisiejszą datę:");
+                DateTime data = DateTime.Parse(Console.ReadLine());
+
                 Console.WriteLine("Lista studentów:");
                 foreach (var student in studenci)
                 {
                     Console.WriteLine($"{student.ToString()}");
                 }
+            }
+
+            // Funkcja sprawdzania obecności
+            Console.Write("Czy chcesz sprawdzić obecność studentów? (tak/nie): ");
+            if (Console.ReadLine().ToLower() == "tak")
+            {
+                SprawdzObecnosc(studenci);
             }
 
             // Dodawanie nowego studenta
@@ -34,6 +47,7 @@ namespace StudentAttendance
             {
                 DodajNowegoStudenta(studenci);
             }
+
 
             // Tworzymy słownik do przechowywania obecności studentów
             Dictionary<Students, bool> obecnosci = new Dictionary<Students, bool>();
@@ -47,6 +61,15 @@ namespace StudentAttendance
 
             // Synchronizujemy obecność ze słownika do listy studentów przed eksportem
             SynchronizujObecnosc(studenci, obecnosci);
+
+
+            //Edycja listy obecnosci
+            Console.WriteLine("Czy chcesz edytować listę obecności? (tak/nie) ");
+            if (Console.ReadLine().ToLower() == "tak")
+            {
+                SprawdzObecnosc(studenci);
+            }
+
 
             // Eksport do formatu wybranego przez użytkownika
             Console.Write("Podaj format zapisu txt/csv: ");
@@ -146,12 +169,16 @@ namespace StudentAttendance
             string imie = Console.ReadLine();
             Console.Write("Podaj nazwisko studenta: ");
             string nazwisko = Console.ReadLine();
+            //funkcja sprawdzania obecności
+            Console.Write("Czy student jest obecny? (tak/nie): ");
+            bool obecnosc = Console.ReadLine().ToLower() == "tak";
 
-            Students nowyStudent = new Students(imie, nazwisko);
+            Students nowyStudent = new Students(imie, nazwisko, obecnosc);
             studenci.Add(nowyStudent);
 
             Console.WriteLine($"Dodano nowego studenta: {nowyStudent.ToString()}");
         }
+
 
         // Funkcja do edycji obecności w słowniku
         static void EdytujObecnosc(Dictionary<Students, bool> obecnosci)
@@ -173,6 +200,17 @@ namespace StudentAttendance
                 {
                     student.Obecny = obecnosci[student];
                 }
+
+        static void SprawdzObecnosc(List<Students> studenci)
+        {
+            foreach (var student in studenci)
+            {
+                Console.Write($"Czy {student.Imie} {student.Nazwisko} jest obecny? (tak/nie): ");
+                bool obecnosc = Console.ReadLine().ToLower() == "tak";
+
+                // aktualizacja obecności
+                student.Obecnosc = obecnosc;
+
             }
         }
     }
@@ -181,25 +219,32 @@ namespace StudentAttendance
     {
         public string Imie { get; set; }
         public string Nazwisko { get; set; }
-        public bool Obecny { get; set; }
+        public bool Obecnosc { get; set; }
 
+        public Students(string imie, string nazwisko, bool obecnosc)
+        {
+            Imie = imie;
+            Nazwisko = nazwisko;
+            Obecnosc = obecnosc; //funkcja sprawdzania obecnosci
+        }
         public Students(string imie, string nazwisko)
         {
             Imie = imie;
             Nazwisko = nazwisko;
-            Obecny = true; // Możemy przyjąć, że dodany student jest obecny
+            Obecnosc = false; //funckja sprawdzania obecnosci
         }
 
         public override string ToString()
         {
-            return $"{Imie} {Nazwisko} - {(Obecny ? "Obecny" : "Nieobecny")}";
+            return $"{Imie} {Nazwisko} - {(Obecnosc ? "Obecny" : "Nieobecny")}";
         }
 
         public string ToCsv()
         {
-            return $"{Imie},{Nazwisko},{(Obecny ? "Obecny" : "Nieobecny")}";
+            return $"{Imie},{Nazwisko},{(Obecnosc ? "Nieobecny" : "Obecny")}";
         }
     }
+
 }
 
 
