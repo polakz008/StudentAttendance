@@ -48,12 +48,28 @@ namespace StudentAttendance
                 DodajNowegoStudenta(studenci);
             }
 
+
+            // Tworzymy słownik do przechowywania obecności studentów
+            Dictionary<Students, bool> obecnosci = new Dictionary<Students, bool>();
+            foreach (var student in studenci)
+            {
+                obecnosci[student] = student.Obecny;
+            }
+
+            // Edytujemy obecność w słowniku
+            EdytujObecnosc(obecnosci);
+
+            // Synchronizujemy obecność ze słownika do listy studentów przed eksportem
+            SynchronizujObecnosc(studenci, obecnosci);
+
+
             //Edycja listy obecnosci
             Console.WriteLine("Czy chcesz edytować listę obecności? (tak/nie) ");
             if (Console.ReadLine().ToLower() == "tak")
             {
                 SprawdzObecnosc(studenci);
             }
+
 
             // Eksport do formatu wybranego przez użytkownika
             Console.Write("Podaj format zapisu txt/csv: ");
@@ -75,7 +91,13 @@ namespace StudentAttendance
 
             Console.WriteLine($"Zapisano plik na pulpicie: {outputFilePath}");
             Console.ReadKey();
+
+            
+
+
         }
+
+        
 
         static List<Students> ImportStudentow(string filePath)
         {
@@ -156,6 +178,29 @@ namespace StudentAttendance
 
             Console.WriteLine($"Dodano nowego studenta: {nowyStudent.ToString()}");
         }
+
+
+        // Funkcja do edycji obecności w słowniku
+        static void EdytujObecnosc(Dictionary<Students, bool> obecnosci)
+        {
+            Console.WriteLine("Edycja obecności studentów:");
+            foreach (var student in obecnosci.Keys)
+            {
+                Console.Write($"Czy {student.Imie} {student.Nazwisko} jest obecny? (tak/nie): ");
+                obecnosci[student] = Console.ReadLine().ToLower() == "tak";
+            }
+        }
+
+        // Funkcja synchronizująca obecność między słownikiem a listą studentów
+        static void SynchronizujObecnosc(List<Students> studenci, Dictionary<Students, bool> obecnosci)
+        {
+            foreach (var student in studenci)
+            {
+                if (obecnosci.ContainsKey(student))
+                {
+                    student.Obecny = obecnosci[student];
+                }
+
         static void SprawdzObecnosc(List<Students> studenci)
         {
             foreach (var student in studenci)
@@ -165,6 +210,7 @@ namespace StudentAttendance
 
                 // aktualizacja obecności
                 student.Obecnosc = obecnosc;
+
             }
         }
     }
