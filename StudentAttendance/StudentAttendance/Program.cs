@@ -24,14 +24,9 @@ namespace StudentAttendance
             else
             {
                 //podanie daty
-                Console.WriteLine("Podaj dzisiejszą datę:");
+                Console.WriteLine("Podaj dzisiejszą datę dd-mm-YY:");
                 DateTime data = DateTime.Parse(Console.ReadLine());
 
-                Console.WriteLine("Lista studentów:");
-                foreach (var student in studenci)
-                {
-                    Console.WriteLine($"{student.ToString()}");
-                }
             }
 
             // Funkcja sprawdzania obecności
@@ -39,6 +34,13 @@ namespace StudentAttendance
             if (Console.ReadLine().ToLower() == "tak")
             {
                 SprawdzObecnosc(studenci);
+            }
+
+            //Wyświetlenie listy obecności
+            Console.WriteLine("Lista studentów:");
+            foreach (var student in studenci)
+            {
+                Console.WriteLine($"{student.ToString()}");
             }
 
             // Dodawanie nowego studenta
@@ -56,20 +58,16 @@ namespace StudentAttendance
                 obecnosci[student] = student.Obecnosc;
             }
 
-            // Edytujemy obecność w słowniku
-            EdytujObecnosc(obecnosci);
+            //Edycja listy obecnosci
+            Console.WriteLine("Czy chcesz edytować listę obecności? (tak/nie): ");
+            if (Console.ReadLine().ToLower() == "tak")
+            {
+                // Edytujemy obecność w słowniku
+                EdytujObecnosc(obecnosci);
+            }
 
             // Synchronizujemy obecność ze słownika do listy studentów przed eksportem
             SynchronizujObecnosc(studenci, obecnosci);
-
-
-            //Edycja listy obecnosci
-            Console.WriteLine("Czy chcesz edytować listę obecności? (tak/nie) ");
-            if (Console.ReadLine().ToLower() == "tak")
-            {
-                SprawdzObecnosc(studenci);
-            }
-
 
             // Eksport do formatu wybranego przez użytkownika
             Console.Write("Podaj format zapisu txt/csv: ");
@@ -92,12 +90,12 @@ namespace StudentAttendance
             Console.WriteLine($"Zapisano plik na pulpicie: {outputFilePath}");
             Console.ReadKey();
 
-            
+
 
 
         }
 
-        
+
 
         static List<Students> ImportStudentow(string filePath)
         {
@@ -202,6 +200,7 @@ namespace StudentAttendance
                 }
             }
         }
+        // Funkcja do sprawdzenia obecności
         static void SprawdzObecnosc(List<Students> studenci)
         {
             foreach (var student in studenci)
